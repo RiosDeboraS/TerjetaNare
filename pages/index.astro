@@ -1,0 +1,1229 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Happy Birthday | Invitación">
+  <main class="invitation-shell">
+    <section class="poster hero-card">
+  <!-- Telaraña inferior en imagen, al lado de la foto -->
+  <img
+    class="web-image web-image-bottom-left"
+    src="/tela de arana.webp"
+    alt=""
+    aria-hidden="true"
+  />
+  
+
+  
+
+  <!-- Spider-Man centrado y colgando -->
+  <div class="hanging-spiderman">
+    <img
+      src="/2181.png"
+      alt="Spider-Man colgando del techo"
+    />
+  </div>
+
+  <div class="star star-one">✦</div>
+  <div class="star star-two">✦</div>
+
+  <p class="eyebrow">Una misión especial</p>
+
+  <h1 class="arched-title" aria-label="Happy Birthday">
+    <span class="arc-word arc-happy" aria-hidden="true">
+      <span>H</span><span>A</span><span>P</span><span>P</span><span>Y</span>
+    </span>
+    <span class="arc-word arc-birthday" aria-hidden="true">
+      <span>B</span><span>I</span><span>R</span><span>T</span><span>H</span><span>D</span><span>A</span><span>Y</span>
+    </span>
+
+    <!-- Globo estrella plateado -->
+    <img
+      class="silver-balloon silver-star-balloon"
+      src="/ChatGPT Image 17 ago 2026, 22_23_57.png"
+      alt=""
+      aria-hidden="true"
+    />
+  </h1>
+
+  <p class="intro">
+    Te invito a celebrar<br />
+    mi cumpleaños
+  </p>
+
+  <div class="age">
+    16
+    <span class="age-spider" aria-hidden="true">🕷️</span>
+  </div>
+
+  <p class="details">
+    DÍA: 22 DE AGOSTO<br />
+   <p class="details"> LUGAR: Antartida Argentina y Etchevere </p>
+    <p class="details">HORA: 20hs</p>
+
+
+    
+<p class="hero-cta">
+  Te espero!<br />
+  Trae tus bebidas favoritas<br />
+  <strong class="no-faltes">
+    ¡No faltes!
+    <img
+      class="silver-balloon silver-sparkle-balloon"
+      src="/ChatGPT Image 17 ago 2026, 22_23_57.png"
+      alt=""
+      aria-hidden="true"
+    />
+  </strong>
+</p>
+
+<div class="girl-frame">
+  <img
+    src="/ChatGPT Image 17 ago 2026, 22_17_38.png"
+    alt="La cumpleañera"
+  />
+
+  
+  </div>
+</section>
+
+
+
+    <section class="rsvp-section">
+      <p class="eyebrow red">
+        ¿Te unes a la aventura?
+      </p>
+
+      <h2>
+        Confirma tu<br />
+        <span>asistencia</span>
+      </h2>
+
+      <p class="supporting">
+        Ayúdame a preparar todo para ti.
+      </p>
+
+      <p
+        id="rsvp-message"
+        class="message"
+        aria-live="polite"
+      ></p>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+    <footer>
+      ✦ Nos vemos en la aventura ✦
+    </footer>
+  </main>
+
+  <script>
+    import { supabase } from '../lib/supabase';
+
+    const form = document.querySelector(
+      '#rsvp-form'
+    ) as HTMLFormElement | null;
+
+    const message = document.querySelector('#rsvp-message');
+    const submitButton = form?.querySelector('button');
+
+    form?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const input = form.querySelector(
+        'input'
+      ) as HTMLInputElement | null;
+
+      if (!input || !message || !input.value.trim()) return;
+
+      const name = input.value.trim();
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Guardando...';
+      }
+
+      message.textContent = '';
+
+      const { error } = await supabase
+        .from('rsvps')
+        .insert({ name });
+
+      if (error) {
+        message.textContent =
+          'No pudimos guardar tu confirmación. Inténtalo de nuevo.';
+
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.innerHTML =
+            '¡Voy a la fiesta! <span>→</span>';
+        }
+
+        return;
+      }
+
+      message.textContent =
+        `¡Genial, ${name}! Tu lugar está reservado.`;
+
+      input.value = '';
+
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.innerHTML =
+          '¡Voy a la fiesta! <span>→</span>';
+      }
+    });
+  </script>
+</Layout>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&display=swap');
+
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(body) {
+    margin: 0;
+    background: #050609;
+    color: #f6f2ea;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .invitation-shell {
+    max-width: 620px;
+    margin: auto;
+    overflow: hidden;
+    background: #f0ede5;
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.7);
+  }
+
+  /*
+   * La imagen original ocupa todo el fondo del póster.
+   * El contenido se escribe directamente sobre ella.
+   */
+  .poster {
+    position: relative;
+    min-height: 1100px;
+    overflow: hidden;
+    isolation: isolate;
+    text-align: center;
+    color: #17191c;
+
+    background-color: #f0ede5;
+    background-image:
+      url('/ChatGPT_Image_17_ago_2026,_19_19_49%20copy.png');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+  }
+
+  /*
+   * Textos y estrellas por encima del fondo.
+   * Se excluyen los elementos con posición absoluta.
+   */
+  .poster > :not(.corner-web):not(.web-image):not(.hanging-spiderman):not(.girl-frame) {
+    position: relative;
+    z-index: 3;
+  }
+
+  .eyebrow {
+    padding-top: 88px;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2 {
+    margin: 26px 15px 16px;
+    font-family: Anton, Impact, sans-serif;
+    font-size: clamp(86px, 21vw, 140px);
+    line-height: 0.8;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    transform: scaleX(0.86);
+  }
+
+  h1 {
+    color: #e31b16;
+
+    text-shadow:
+      2px 2px 0 #fff,
+      5px 5px 0 #b91512,
+      7px 7px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  h1 span,
+  h2 span {
+    display: inline-block;
+  }
+
+  .intro {
+    margin: 24px 0 10px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.7;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .age {
+    margin: 0;
+    color: #e5261e;
+    font-family: Anton, Impact, sans-serif;
+    font-size: 142px;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+
+    text-shadow:
+      2px 2px 0 #fff,
+      5px 5px 0 #bd1713;
+  }
+
+  .details,
+  .hero-cta {
+    margin: 12px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.85;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .hero-cta {
+    z-index: 7 !important;
+    margin-top: 24px;
+    line-height: 1.8;
+  }
+
+  .hero-cta strong {
+    color: #e4231d;
+    font-size: 17px;
+  }
+
+  /*
+   * Telarañas superiores.
+   */
+  .corner-web {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    width: 175px;
+    height: 175px;
+    overflow: hidden;
+    opacity: 0.42;
+    pointer-events: none;
+
+    background:
+      repeating-radial-gradient(
+        circle at 0 0,
+        transparent 0 25px,
+        #c51d1a 26px 29px
+      ),
+      repeating-conic-gradient(
+        from 0deg at 0 0,
+        transparent 0 14deg,
+        #c51d1a 15deg 17deg
+      );
+
+    filter:
+      drop-shadow(1px 2px 0 rgba(0, 0, 0, 0.35));
+  }
+
+  .corner-web-left {
+    left: 0;
+    border-radius: 0 0 100% 0;
+  }
+
+  .corner-web-right {
+    right: 0;
+    border-radius: 0 0 0 100%;
+    transform: scaleX(-1);
+  }
+
+  /*
+   * Spider-Man colgando.
+   */
+  .hanging-spiderman {
+    position: absolute;
+    z-index: 8;
+    top: -18px;
+    right: 12px;
+    width: 165px;
+    pointer-events: none;
+
+    animation:
+      spidermanEntrance 1.3s ease-out both;
+  }
+
+  .hanging-spiderman img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform-origin: 50% 0;
+
+    filter:
+      drop-shadow(
+        4px 7px 4px rgba(0, 0, 0, 0.35)
+      );
+
+    animation:
+      spidermanSwing 4s ease-in-out 1.3s infinite;
+  }
+
+  @keyframes spidermanEntrance {
+    from {
+      opacity: 0;
+      transform: translateY(-150px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes spidermanSwing {
+    0%,
+    100% {
+      transform: rotate(-2deg);
+    }
+
+    50% {
+      transform: rotate(2deg);
+    }
+  }
+
+  .star {
+    position: absolute;
+    z-index: 4;
+    color: #14171b;
+    font-size: 38px;
+    text-shadow: 2px 2px 0 white;
+  }
+
+  .star-one {
+    top: 350px;
+    right: 75px;
+  }
+
+  .star-two {
+    right: 32px;
+    bottom: 320px;
+    font-size: 27px;
+  }
+
+  /*
+   * Imagen de la niña en el costado derecho.
+   * No hay telaraña CSS detrás.
+   */
+  .girl-frame {
+  position: absolute;
+  z-index: 6;
+  right: 20px;
+  bottom: -70px; /* Baja la imagen aproximadamente 2 cm */
+  width: 290px;
+  overflow: visible;
+  pointer-events: none;
+  transform: rotate(2deg);
+  transform-origin: center bottom;
+}
+
+  .girl-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    mix-blend-mode: multiply;
+
+    filter:
+      drop-shadow(
+        7px 9px 7px rgba(0, 0, 0, 0.16)
+      );
+  }
+
+  .rsvp-section {
+    padding: 78px 28px 88px;
+    background: #10151a;
+    text-align: center;
+  }
+
+  .red {
+    padding: 0;
+    color: #e22620;
+  }
+
+  h2 {
+    margin: 24px 0 16px;
+    color: #f3efe7;
+    font-size: clamp(64px, 15vw, 105px);
+    text-shadow: 4px 4px 0 #d31e1b;
+  }
+
+  h2 span {
+    color: #e3231c;
+  }
+
+  .supporting {
+    color: #b9bec2;
+    font-size: 13px;
+  }
+
+  form {
+    max-width: 380px;
+    margin: 38px auto 0;
+    text-align: left;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 9px;
+    color: #aeb4b8;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 3px;
+    border: 0;
+    border-bottom: 1px solid #778087;
+    outline: 0;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+  }
+
+  input:focus {
+    border-color: #e3231c;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 28px;
+    padding: 17px;
+    border: 0;
+    background: #e3231c;
+    color: #fff;
+    cursor: pointer;
+    font: 700 12px 'Space Mono', monospace;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+
+    transition:
+      transform 0.2s,
+      background 0.2s;
+  }
+
+  button:hover {
+    background: #b91612;
+    transform: translateY(-3px);
+  }
+
+  button span {
+    float: right;
+    font-size: 18px;
+  }
+
+  .message {
+    min-height: 22px;
+    color: #f14b43;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  footer {
+    padding: 28px;
+    background: #080b0e;
+    color: #899197;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  footer:first-letter {
+    color: #e3231c;
+  }
+
+  @media (max-width: 420px) {
+    .poster {
+      min-height: 1000px;
+      background-position: center top;
+      background-size: cover;
+    }
+
+    .corner-web {
+      width: 125px;
+      height: 125px;
+      opacity: 0.34;
+    }
+
+    .hanging-spiderman {
+      top: -12px;
+      right: -8px;
+      width: 125px;
+    }
+
+    .girl-frame {
+      right: -5px;
+      bottom: -8px;
+      width: 235px;
+      transform: rotate(2deg);
+    }
+
+    .star-two {
+      right: 14px;
+      bottom: 295px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hanging-spiderman,
+    .hanging-spiderman img {
+      animation: none;
+    }
+  }
+  /* =====================================
+   AJUSTES FINALES DEL PÓSTER
+===================================== */
+
+/* Asegura el posicionamiento correcto */
+.poster > :not(.corner-web):not(.web-image):not(.hanging-spiderman):not(.girl-frame) {
+  position: relative;
+  z-index: 3;
+}
+
+/* Número un poco más grande */
+.age {
+  position: relative;
+  display: inline-block;
+  z-index: 5;
+  font-size: 158px;
+}
+
+/* Araña pequeña apoyada sobre el número */
+.age-spider {
+  position: absolute;
+  z-index: 6;
+  top: 8px;
+  right: -35px;
+  font-size: 38px;
+  line-height: 1;
+  transform: rotate(-18deg);
+
+  filter:
+    drop-shadow(2px 2px 0 #ffffff)
+    drop-shadow(4px 5px 1px rgba(0, 0, 0, 0.45));
+}
+
+/* El mensaje siempre queda por encima */
+.hero-cta {
+  position: relative;
+  z-index: 8 !important;
+  margin-top: 24px;
+  line-height: 1.8;
+}
+
+.hero-cta strong {
+  position: relative;
+  z-index: 8;
+  display: inline-block;
+  color: #e4231d;
+  font-size: 18px;
+
+  text-shadow:
+    1px 1px 0 #ffffff,
+    2px 2px 0 rgba(0, 0, 0, 0.18);
+}
+
+/* =====================================
+   SPIDER-MAN CENTRADO
+===================================== */
+
+.hanging-spiderman {
+  position: absolute;
+  z-index: 9;
+  top: -20px;
+  left: 50%;
+  right: auto;
+  width: 160px;
+  pointer-events: none;
+
+  transform: translateX(-50%);
+  animation: spidermanEntranceCenter 1.3s ease-out both;
+}
+
+.hanging-spiderman img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: 50% 0;
+
+  filter:
+    drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.85))
+    drop-shadow(5px 8px 5px rgba(0, 0, 0, 0.4));
+
+  animation:
+    spidermanSwingCenter 4s ease-in-out 1.3s infinite;
+}
+
+@keyframes spidermanEntranceCenter {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-160px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes spidermanSwingCenter {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+/* =====================================
+   TELARAÑAS ROJAS SIMPLES
+===================================== */
+
+.corner-web {
+  position: absolute;
+  z-index: 2;
+  width: 190px;
+  height: 190px;
+  pointer-events: none;
+  opacity: 0.88;
+
+  background:
+    repeating-radial-gradient(
+      circle at 0 0,
+      transparent 0 27px,
+      #e31b16 28px 31px
+    ),
+    repeating-conic-gradient(
+      from 0deg at 0 0,
+      transparent 0 14deg,
+      #e31b16 15deg 17deg
+    );
+
+  filter:
+    drop-shadow(2px 2px 0 #111111)
+    drop-shadow(3px 4px 2px rgba(0, 0, 0, 0.45))
+    drop-shadow(0 0 4px rgba(227, 27, 22, 0.4));
+}
+
+/* Superior izquierda */
+.corner-web-left {
+  top: 0;
+  left: 0;
+}
+
+/* Superior derecha */
+.corner-web-right {
+  top: 0;
+  right: 0;
+  transform: scaleX(-1);
+}
+
+/* Inferior izquierda */
+.corner-web-bottom-left {
+  bottom: 0;
+  left: 0;
+  transform: scaleY(-1);
+}
+
+/* Inferior derecha */
+.corner-web-bottom-right {
+  right: 0;
+  bottom: 0;
+  transform: scale(-1);
+}
+
+@media (max-width: 420px) {
+  .corner-web {
+    width: 145px;
+    height: 145px;
+    opacity: 0.82;
+
+    background:
+      repeating-radial-gradient(
+        circle at 0 0,
+        transparent 0 22px,
+        #e31b16 23px 26px
+      ),
+      repeating-conic-gradient(
+        from 0deg at 0 0,
+        transparent 0 14deg,
+        #e31b16 15deg 17deg
+      );
+  }
+}
+/* =====================================
+   FOTO DE LA NIÑA MÁS ABAJO
+===================================== */
+
+.girl-frame {
+  position: absolute;
+  z-index: 6;
+  right: 20px;
+  bottom: -69px;
+  width: 290px;
+  overflow: visible;
+  pointer-events: none;
+  transform: rotate(2deg);
+  transform-origin: center bottom;
+}
+
+.girl-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  mix-blend-mode: multiply;
+
+  /* Recorte irregular estilo revista */
+  clip-path: polygon(
+    3% 2%,
+    97% 0,
+    100% 25%,
+    98% 52%,
+    100% 78%,
+    96% 100%,
+    67% 98%,
+    35% 100%,
+    2% 97%,
+    0 72%,
+    2% 45%,
+    0 18%
+  );
+
+  filter:
+    drop-shadow(5px 7px 0 rgba(0, 0, 0, 0.2))
+    drop-shadow(9px 11px 6px rgba(0, 0, 0, 0.16));
+}
+
+@media (max-width: 420px) {
+  .girl-frame {
+    right: -4px;
+    bottom: 25px;
+    width: 245px;
+    transform: rotate(2deg);
+  }
+
+  .girl-frame img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+}
+/* =====================================
+   VERSIÓN PARA CELULAR
+===================================== */
+
+@media (max-width: 420px) {
+  .poster {
+    min-height: 1000px;
+  }
+
+  .hanging-spiderman {
+    top: -14px;
+    left: 50%;
+    right: auto;
+    width: 125px;
+  }
+
+  .corner-web {
+    width: 135px;
+    height: 135px;
+    opacity: 0.72;
+  }
+
+  .age {
+    font-size: 145px;
+  }
+
+  .age-spider {
+    top: 8px;
+    right: -25px;
+    font-size: 30px;
+  }
+
+  .girl-frame {
+    right: -7px;
+    bottom: -48px;
+    width: 218px;
+    border-width: 3px;
+    border-radius: 38px 38px 20px 20px;
+
+    box-shadow:
+      5px 6px 0 rgba(198, 25, 21, 0.8),
+      8px 10px 0 rgba(0, 0, 0, 0.18);
+  }
+
+  .hero-cta {
+    padding-right: 105px;
+  }
+
+  .star-two {
+    right: 15px;
+    bottom: 285px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hanging-spiderman,
+  .hanging-spiderman img {
+    animation: none;
+  }
+}
+
+/* =====================================
+   AJUSTES: TÍTULO, FOTO Y TELARAÑA
+===================================== */
+
+/* Las dos palabras conservan su lugar y forman un arco. */
+.arched-title {
+  width: 100%;
+  margin: 20px auto 24px;
+  line-height: 0.72;
+  transform: none;
+}
+
+.arc-word {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: 104px;
+}
+
+.arc-word > span {
+  display: inline-block;
+  transform-origin: center bottom;
+}
+
+.arc-happy > span:nth-child(1) { transform: translateY(30px) rotate(-13deg); }
+.arc-happy > span:nth-child(2) { transform: translateY(12px) rotate(-7deg); }
+.arc-happy > span:nth-child(3) { transform: translateY(2px); }
+.arc-happy > span:nth-child(4) { transform: translateY(12px) rotate(7deg); }
+.arc-happy > span:nth-child(5) { transform: translateY(30px) rotate(13deg); }
+
+.arc-birthday {
+  margin-top: -5px;
+  font-size: 0.77em;
+}
+
+.arc-birthday > span:nth-child(1) { transform: translateY(32px) rotate(-13deg); }
+.arc-birthday > span:nth-child(2) { transform: translateY(19px) rotate(-9deg); }
+.arc-birthday > span:nth-child(3) { transform: translateY(9px) rotate(-5deg); }
+.arc-birthday > span:nth-child(4) { transform: translateY(3px) rotate(-2deg); }
+.arc-birthday > span:nth-child(5) { transform: translateY(3px) rotate(2deg); }
+.arc-birthday > span:nth-child(6) { transform: translateY(9px) rotate(5deg); }
+.arc-birthday > span:nth-child(7) { transform: translateY(19px) rotate(9deg); }
+.arc-birthday > span:nth-child(8) { transform: translateY(32px) rotate(13deg); }
+
+/* La foto queda más alejada del bloque de texto. */
+.girl-frame {
+  right: -12px;
+  bottom: 12px;
+  width: 275px;
+}
+
+.hero-cta {
+  padding-right: 185px;
+  padding-left: 18px;
+  text-align: left;
+}
+
+/* La telaraña deja las bolas superiores y baja junto a la niña. */
+.corner-web-bottom-left {
+  top: auto;
+  bottom: 8px;
+  left: 0;
+  width: 225px;
+  height: 225px;
+  opacity: 0.88;
+  transform: scaleY(-1);
+}
+
+@media (max-width: 420px) {
+  .arched-title {
+    margin-top: 18px;
+    font-size: clamp(72px, 21vw, 96px);
+  }
+
+  .arc-word {
+    height: 77px;
+  }
+
+  .arc-happy > span:nth-child(1),
+  .arc-happy > span:nth-child(5) {
+    transform: translateY(21px) rotate(11deg);
+  }
+
+  .arc-happy > span:nth-child(1) {
+    transform: translateY(21px) rotate(-11deg);
+  }
+
+  .arc-happy > span:nth-child(2) { transform: translateY(9px) rotate(-6deg); }
+  .arc-happy > span:nth-child(3) { transform: translateY(2px); }
+  .arc-happy > span:nth-child(4) { transform: translateY(9px) rotate(6deg); }
+
+  .arc-birthday {
+    margin-top: -2px;
+  }
+
+  .arc-birthday > span:nth-child(1) { transform: translateY(22px) rotate(-11deg); }
+  .arc-birthday > span:nth-child(2) { transform: translateY(14px) rotate(-8deg); }
+  .arc-birthday > span:nth-child(3) { transform: translateY(7px) rotate(-4deg); }
+  .arc-birthday > span:nth-child(4) { transform: translateY(2px) rotate(-2deg); }
+  .arc-birthday > span:nth-child(5) { transform: translateY(2px) rotate(2deg); }
+  .arc-birthday > span:nth-child(6) { transform: translateY(7px) rotate(4deg); }
+  .arc-birthday > span:nth-child(7) { transform: translateY(14px) rotate(8deg); }
+  .arc-birthday > span:nth-child(8) { transform: translateY(22px) rotate(11deg); }
+
+  .girl-frame {
+    right: -25px;
+    bottom: 8px;
+    width: 225px;
+  }
+
+  .hero-cta {
+    padding-right: 140px;
+    padding-left: 14px;
+    font-size: 11px;
+  }
+
+  .corner-web-bottom-left {
+    top: auto;
+    bottom: 4px;
+    left: 0;
+    width: 165px;
+    height: 165px;
+    opacity: 0.82;
+  }
+}
+
+/* =====================================
+   CORRECCIONES DE POSICIÓN
+===================================== */
+
+/* El texto vuelve exactamente al centro; no se desplaza para dejar lugar. */
+.hero-cta {
+  padding-right: 0;
+  padding-left: 0;
+  text-align: center;
+}
+
+/* Aumentar la altura baja solamente la foto y la telaraña; el texto no se mueve. */
+.poster {
+  min-height: 1220px;
+}
+
+.girl-frame {
+  right: -12px;
+  bottom: 12px;
+  width: 275px;
+}
+
+/* Misma telaraña simple que estaba arriba, trasladada a la esquina inferior. */
+.corner-web-bottom-left {
+  top: auto;
+  bottom: 0;
+  left: 0;
+  width: 190px;
+  height: 190px;
+  overflow: hidden;
+  opacity: 0.88;
+  border-radius: 0 100% 0 0;
+  transform: scaleY(-1);
+
+  background:
+    repeating-radial-gradient(
+      circle at 0 0,
+      transparent 0 27px,
+      #e31b16 28px 31px
+    ),
+    repeating-conic-gradient(
+      from 0deg at 0 0,
+      transparent 0 14deg,
+      #e31b16 15deg 17deg
+    );
+
+  filter:
+    drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.72));
+}
+
+@media (max-width: 420px) {
+  .poster {
+    min-height: 1120px;
+  }
+
+  .hero-cta {
+    padding-right: 0;
+    padding-left: 0;
+    text-align: center;
+    font-size: 11px;
+  }
+
+  .girl-frame {
+    right: -22px;
+    bottom: 8px;
+    width: 225px;
+  }
+
+  .corner-web-bottom-left {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 145px;
+    height: 145px;
+    overflow: hidden;
+    border-radius: 0 100% 0 0;
+  }
+}
+/* =====================================
+   TELARAÑA EN IMAGEN TRANSPARENTE
+===================================== */
+
+.web-image-bottom-left {
+  position: absolute;
+  z-index: 5;
+  left: -8px;
+  bottom: 5px;
+  width: 235px;
+  height: auto;
+  pointer-events: none;
+  opacity: 0.92;
+  transform: rotate(-4deg);
+  transform-origin: left bottom;
+
+  /* Convierte los hilos claros a rojo y agrega una sombra negra. */
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(16%)
+    sepia(98%)
+    saturate(5700%)
+    hue-rotate(356deg)
+    brightness(95%)
+    contrast(115%)
+    drop-shadow(3px 4px 1px rgba(0, 0, 0, 0.72));
+}
+
+@media (max-width: 420px) {
+  .web-image-bottom-left {
+    left: -12px;
+    bottom: 2px;
+    width: 175px;
+    opacity: 0.9;
+  }
+}
+
+
+/* =====================================
+   GLOBOS PLATEADOS
+===================================== */
+
+.silver-balloon {
+  display: block;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  z-index: 10;
+  filter: drop-shadow(4px 6px 4px rgba(0, 0, 0, 0.22));
+}
+
+/* Estrella gordita junto a HAPPY BIRTHDAY */
+.arched-title {
+  position: relative;
+}
+
+.silver-star-balloon {
+  position: absolute;
+  width: 150px;
+  left: 18px;
+  top: 96px;
+  transform: rotate(-12deg);
+  animation: silverFloat 4.5s ease-in-out infinite;
+}
+
+/* Brillito pequeño junto a NO FALTES */
+.no-faltes {
+  position: relative;
+  display: inline-block;
+}
+
+.silver-sparkle-balloon {
+  position: absolute;
+  width: 100px;
+  right: 170px;
+  top: 10%;
+  transform: translateY(-50%) rotate(8deg);
+  animation: silverSparkle 3s ease-in-out infinite;
+}
+
+@keyframes silverFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-12deg);
+  }
+
+  50% {
+    transform: translateY(-7px) rotate(-8deg);
+  }
+}
+
+@keyframes silverSparkle {
+  0%, 100% {
+    transform: translateY(-50%) scale(1) rotate(8deg);
+  }
+
+  50% {
+    transform: translateY(-50%) scale(1.08) rotate(12deg);
+  }
+}
+
+@media (max-width: 420px) {
+  .silver-star-balloon {
+    width: 60px;
+    left: 5px;
+    top: 74px;
+  }
+
+  .silver-sparkle-balloon {
+    width: 29px;
+    right: -36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .silver-star-balloon,
+  .silver-sparkle-balloon {
+    animation: none;
+  }
+}
+
+</style>
